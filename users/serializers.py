@@ -23,3 +23,10 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+    def update(self, instance, validated_data):
+        if validated_data['username'] != instance.username:
+            raise serializers.ValidationError('You must not change username after registration.')
+        instance.set_password(validated_data['password'])
+        instance.save()
+        return instance

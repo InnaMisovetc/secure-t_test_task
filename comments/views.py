@@ -10,12 +10,16 @@ from .serializers import CommentSerializer
 from posts.models import Post
 
 
-class CommentCreateView(ListCreateAPIView):
+class CommentListCreateView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     queryset = Comment.objects.all()
     model = Comment
     serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Comment.objects.filter(post_id=post_id)
 
     def perform_create(self, serializer):
         post_id = self.kwargs['post_id']
